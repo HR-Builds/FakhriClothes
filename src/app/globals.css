@@ -2,32 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+html { scroll-behavior: smooth; }
+::selection { background: #c9a227; color: #0b3d2e; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #faf6ef; }
+::-webkit-scrollbar-thumb { background: #0b3d2e; border-radius: 4px; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer components {
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 bg-gold text-emerald font-semibold
+      px-6 py-3 rounded-full transition-all duration-300
+      hover:bg-gold-light hover:shadow-luxe hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-emerald text-emerald
+      px-6 py-3 rounded-full transition-all duration-300
+      hover:bg-emerald hover:text-cream hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none;
   }
+  .btn-emerald {
+    @apply inline-flex items-center justify-center gap-2 bg-emerald text-cream font-semibold
+      px-6 py-3 rounded-full transition-all duration-300 hover:bg-emerald-light hover:-translate-y-0.5;
+  }
+  .section-title { @apply font-serif text-3xl md:text-5xl text-emerald mb-3; }
+  .gold-underline { @apply block w-24 h-1 bg-gold rounded-full mt-3; }
+  .input-luxe {
+    @apply w-full border border-emerald/20 bg-white rounded-lg px-4 py-3
+      focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent
+      transition-shadow placeholder:text-emerald/40;
+  }
+  .label-luxe { @apply block text-sm font-medium text-emerald mb-1.5; }
+  .card-luxe {
+    @apply bg-white rounded-2xl shadow-card overflow-hidden transition-all duration-500
+      hover:shadow-luxe hover:-translate-y-1.5;
+  }
+  .badge-gold { @apply bg-gold text-emerald text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider; }
+  .admin-input { @apply w-full border border-emerald/20 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold bg-white; }
+  .admin-table th { @apply text-left text-xs uppercase tracking-wider text-emerald/60 py-3 px-4 border-b border-emerald/10; }
+  .admin-table td { @apply py-3 px-4 border-b border-emerald/5 text-sm; }
 }

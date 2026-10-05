@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  phone         String?
+  passwordHash  String
+  emailVerified Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  cartItems     CartItem[]
+  orders        Order[]
+  reviews       Review[]
+  addresses     Address[]
+  otpCodes      PhoneOtp[]
+}
+
+model EmailToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+}
+
+model PhoneOtp {
+  id        String   @id @default(cuid())
+  userId    String
+  phone     String
+  code      String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  collectionName String
+  category       String   // "one-piece" | "two-piece" | "three-piece"
+  price          Int      // PKR
+  fabric         String
+  description    String
+  images         String   // JSON array string
+  stockQty       Int      @default(0)
+  featured       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  reviews        Review[]
+  cartItems      CartItem[]
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  qty       Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Address {
+  id           String  @id @default(cuid())
+  userId       String
+  flatNo       String
+  buildingName String
+  area         String
+  city         String
+  zipCode      String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id                   String   @id @default(cuid())
+  userId               String
+  customerName         String
+  customerEmail        String
+  customerPhone        String
+  flatNo               String
+  buildingName         String
+  area                 String
+  city                 String
+  zipCode              String
+  items                String   // JSON: [{productId,name,qty,price}]
+  deliveryFee          Int
+  total                Int
+  paymentMethod        String   @default("bank")
+  gatewayTransactionId String?
+  paymentStatus        String   @default("PENDING") // PENDING|SUCCESS|FAILED
+  orderStatus          String   @default("PROCESSING") // PROCESSING|SHIPPED|DELIVERED (set only after payment success)
+  shippedAt            DateTime?
+  deliveredAt          DateTime?
+  phoneVerifiedForOrder Boolean @default(false)
+  createdAt            DateTime @default(now())
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  userId    String
+  rating    Int
+  comment   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model HomepageContent {
+  id                 Int    @id @default(1)
+  banners            String // JSON: [{title, subtitle, image, cta}]
+  featuredProductIds String // JSON: string[]
+  storyTitle         String @default("The Fakhri Story")
+  storyText          String @default("")
+}
