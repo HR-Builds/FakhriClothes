@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, AuthError } from "@/lib/auth";
 import { mkdir, writeFile } from "fs/promises";
@@ -27,9 +28,7 @@ export async function POST(req: NextRequest) {
 
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        {
-          error: "Only JPG, PNG, WEBP or GIF images are allowed.",
-        },
+        { error: "Only JPG, PNG, WEBP or GIF images are allowed." },
         { status: 400 }
       );
     }
@@ -63,13 +62,10 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    await writeFile(
-      path.join(uploadDir, filename),
-      buffer
-    );
+    await writeFile(path.join(uploadDir, filename), buffer);
 
     return NextResponse.json({
-      url: `/uploads/${filename}`,
+      url: `/api/uploads/${filename}`,
     });
   } catch (e) {
     if (e instanceof AuthError) {
